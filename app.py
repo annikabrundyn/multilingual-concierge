@@ -58,11 +58,22 @@ class TwilioService:
     """Service class for handling Twilio operations."""
     def __init__(self):
         self.client = Client()
+        self.from_number = os.getenv("TWILIO_PHONE_NUMBER")
+
+        if not self.from_number:
+            raise ValueError("Environment variable TWILIO_PHONE_NUMBER is not set")
 
     def send_whatsapp_message(self, to_number: str, message: str) -> None:
         """Send a WhatsApp message using Twilio."""
+
+        # Ensure the 'to' number has whatsapp: prefix
+        if not to_number.startswith("whatsapp:"):
+            to_number = f"whatsapp:{to_number}"
+
+        print(f"Sending WhatsApp message\nFrom: {self.from_number}\nTo: {to_number}\nMessage: {message}")
+
         self.client.messages.create(
-            from_=Config.TWILIO_PHONE_NUMBER,
+            from_=self.from_number,
             to=f"whatsapp:{to_number}",
             body=message
         )
