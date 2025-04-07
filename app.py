@@ -74,7 +74,7 @@ class TwilioService:
 
         self.client.messages.create(
             from_=self.from_number,
-            to=f"whatsapp:{to_number}",
+            to=to_number,
             body=message
         )
 
