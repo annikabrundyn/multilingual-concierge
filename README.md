@@ -28,6 +28,18 @@ This keeps things fast and human. No bots, no extra apps for the guest, no need 
 
 ---
 
+## Demo
+
+Here’s what the staff dashboard looks like:
+
+![Staff Inbox UI](assets/screenshot-inbox.png)
+
+And here’s what the guest sees via WhatsApp:
+
+![WhatsApp Guest View](assets/screenshot-whatsapp.png)
+
+---
+
 ## How It Works
 
 1. A guest sends a WhatsApp message to a Twilio sandbox number
