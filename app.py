@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Dict, List, Tuple, Optional
 from flask import Flask, request, render_template, redirect
 from openai import OpenAI
@@ -17,6 +18,8 @@ class Message:
     original: str
     translated: str
     lang: str
+    replied: bool = False
+    timestamp: str = field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 class Config:
     """Configuration class to handle environment variables."""
@@ -126,6 +129,13 @@ def reply():
         translated = openai_service.translate_back_to_original(full_reply, lang)
 
         twilio_service.send_whatsapp_message(number, translated)
+
+        # Mark the message as replied
+        for msg in guest_messages:
+            if msg.number == number and not msg.replied:
+                msg.replied = True
+                break
+        
         return redirect("/inbox")
 
     except KeyError as e:

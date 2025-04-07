@@ -1,37 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Inbox</title>
+  <meta charset="UTF-8">
+  <title>Concierge Inbox</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding-top: 70px; }
+    .card.fade-out {
+      transition: opacity 0.5s ease;
+      opacity: 0;
+    }
+  </style>
 </head>
-<body class="p-4">
-  <h1>📥 Guest Inbox</h1>
+<body class="bg-light">
 
+<!-- 🧭 Top Navbar -->
+<nav class="navbar fixed-top navbar-light bg-white shadow-sm">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1">🛎️ Multilingual Concierge Inbox</span>
+  </div>
+</nav>
+
+<!-- 📬 Message Container -->
+<div class="container py-3">
   {% if messages %}
-    {% for msg in messages %}
-      <div class="card mb-4 p-3">
-        <strong>From:</strong> {{ msg.number }}<br>
-        <strong>Original:</strong> {{ msg.original }}<br>
-        <strong>Translated:</strong> {{ msg.translated }}<br>
-        <strong>Language:</strong> {{ msg.lang }}<br><br>
+    {% for msg in messages if not msg.replied %}
+      <div class="card shadow-sm mb-4 position-relative">
+        <div class="card-body">
+          <!-- Language Badge -->
+          <span class="badge bg-info position-absolute top-0 end-0 m-3">🌍 {{ msg.lang }}</span>
 
-        <!-- 🔽 This is the reply form -->
-        <form action="/reply" method="post">
-          <input type="hidden" name="number" value="{{ msg.number }}">
-          <div class="mb-2">
-            <label>Your name:</label>
-            <input name="name" class="form-control" required>
+          <h5 class="card-title">From {{ msg.number }}</h5>
+          <p class="text-muted mb-1"><small>Received at: {{ msg.timestamp }}</small></p>
+          <p class="mb-1"><strong>Original:</strong> {{ msg.original }}</p>
+          <div class="bg-light border rounded p-2 mb-3">
+            <strong>Translated:</strong> {{ msg.translated }}
           </div>
-          <div class="mb-2">
-            <label>Reply:</label>
-            <input name="reply" class="form-control" style="width:100%;" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Send Reply</button>
-        </form>
+
+          <!-- 📝 Reply Form -->
+          <form action="/reply" method="post">
+            <input type="hidden" name="number" value="{{ msg.number }}">
+            <div class="row g-2 align-items-center mb-2">
+              <div class="col-md-4">
+                <input type="text" name="name" class="form-control" placeholder="Your name" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" name="reply" class="form-control" placeholder="Your reply..." required>
+              </div>
+              <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-primary">Send</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     {% endfor %}
   {% else %}
-    <p>No messages yet. Send a message to your WhatsApp bot to get started!</p>
+    <div class="alert alert-info text-center">
+      No messages yet. Try sending a WhatsApp message to the bot to get started!
+    </div>
   {% endif %}
+</div>
+
+<!-- ✅ Fade-out effect after reply -->
+<script>
+  const forms = document.querySelectorAll("form");
+
+  forms.forEach(form => {
+    form.addEventListener("submit", (e) => {
+      const card = form.closest(".card");
+      card.classList.add("fade-out");
+      setTimeout(() => {
+        card.remove();
+      }, 500);
+    });
+  });
+</script>
+
 </body>
 </html>
