@@ -36,7 +36,7 @@ Here’s what the staff dashboard looks like:
 
 And here’s what the guest sees via WhatsApp:
 
-![WhatsApp Guest View](assets/screenshot-whatsapp.png)
+![WhatsApp Guest View](assets/screenshot-whatsapp.jpg)
 
 ---
 
